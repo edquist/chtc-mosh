@@ -1,12 +1,13 @@
 #!/bin/bash
 
-mosh_target=learn.chtc.wisc.edu
+mosh_host=learn.chtc.wisc.edu
 ssh_proxy=moria.cs.wisc.edu
+
+export LC_ALL=en_US.UTF-8   # mosh requires UTF-8 locale
 
 { read _ _ SERVER_IP _
   read _ _ MOSH_PORT MOSH_KEY
-} < <(ssh -o ProxyJump=$ssh_proxy $mosh_target \
-      'echo $SSH_CONNECTION; LC_ALL=en_US.UTF-8 mosh-server new -s')
+} < <(ssh -J $ssh_proxy $mosh_host 'echo $SSH_CONNECTION; mosh-server new -s')
 
 export MOSH_KEY
 exec mosh-client "$SERVER_IP" "$MOSH_PORT"
