@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mosh_target=learn.chtc.wisc.edu
+ssh_proxy=moria.cs.wisc.edu
+
+{ read _ _ SERVER_IP _
+  read _ _ MOSH_PORT MOSH_KEY
+} < <(ssh -o ProxyJump=$ssh_proxy $mosh_target \
+      'echo $SSH_CONNECTION; LC_ALL=en_US.UTF-8 mosh-server new -s')
+
+export MOSH_KEY
+exec mosh-client "$SERVER_IP" "$MOSH_PORT"
+
